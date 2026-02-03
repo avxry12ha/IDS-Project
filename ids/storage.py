@@ -13,7 +13,10 @@ class Alert:
     protocol: str
     alert_type: str
     severity: str
+    category: str
     details: str
+    src_port: int | None = None
+    dst_port: int | None = None
 
 
 @dataclass
@@ -45,7 +48,10 @@ class Storage:
                     protocol TEXT NOT NULL,
                     alert_type TEXT NOT NULL,
                     severity TEXT NOT NULL,
-                    details TEXT NOT NULL
+                    category TEXT NOT NULL,
+                    details TEXT NOT NULL,
+                    src_port INTEGER,
+                    dst_port INTEGER
                 )
                 """
             )
@@ -59,6 +65,19 @@ class Storage:
                 )
                 """
             )
+            self._ensure_columns(connection)
+
+    def _ensure_columns(self, connection: sqlite3.Connection) -> None:
+        columns = {
+            row[1] for row in connection.execute("PRAGMA table_info(alerts)")
+        }
+        for column, definition in {
+            "category": "TEXT NOT NULL DEFAULT 'Unknown'",
+            "src_port": "INTEGER",
+            "dst_port": "INTEGER",
+        }.items():
+            if column not in columns:
+                connection.execute(f"ALTER TABLE alerts ADD COLUMN {column} {definition}")
 
     def save_alert(self, alert: Alert) -> None:
         with self._connect() as connection:
@@ -71,8 +90,11 @@ class Storage:
                     protocol,
                     alert_type,
                     severity,
-                    details
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    category,
+                    details,
+                    src_port,
+                    dst_port
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     alert.timestamp.isoformat(),
@@ -81,7 +103,10 @@ class Storage:
                     alert.protocol,
                     alert.alert_type,
                     alert.severity,
+                    alert.category,
                     alert.details,
+                    alert.src_port,
+                    alert.dst_port,
                 ),
             )
 
@@ -113,34 +138,5 @@ class Storage:
                 LIMIT ?
                 """,
                 (limit,),
-            )
-            return list(cursor.fetchall())
-
-    def fetch_alert_counts(self) -> list[sqlite3.Row]:
-        with self._connect() as connection:
-            cursor = connection.execute(
-                """
-                SELECT alert_type, COUNT(*) AS count
-                FROM alerts
-                GROUP BY alert_type
-                ORDER BY count DESC
-                """
-            )
-            return list(cursor.fetchall())
-
-    def fetch_traffic_summary(self, minutes: int = 30) -> list[sqlite3.Row]:
-        with self._connect() as connection:
-            cursor = connection.execute(
-                """
-                SELECT
-                    strftime('%H:%M', timestamp) AS bucket,
-                    protocol,
-                    SUM(bytes_count) AS bytes
-                FROM traffic_samples
-                WHERE timestamp >= datetime('now', ?)
-                GROUP BY bucket, protocol
-                ORDER BY bucket ASC
-                """,
-                (f"-{minutes} minutes",),
             )
             return list(cursor.fetchall())

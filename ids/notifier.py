@@ -22,7 +22,9 @@ class Notifier:
 
     def notify(self, alert: Alert) -> None:
         message = (
-            f"[{alert.severity}] {alert.alert_type} from {alert.src_ip} to {alert.dst_ip}\n"
+            f"[{alert.severity}] {alert.alert_type} ({alert.category})\n"
+            f"Source: {alert.src_ip}:{alert.src_port or '-'}\n"
+            f"Target: {alert.dst_ip}:{alert.dst_port or '-'}\n"
             f"Protocol: {alert.protocol}\n"
             f"Details: {alert.details}\n"
             f"Timestamp: {alert.timestamp.isoformat()}"
