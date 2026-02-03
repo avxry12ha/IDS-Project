@@ -1,6 +1,6 @@
 # IDS-Project
 
-Prototype intrusion detection system (IDS) with alerting, optional blocking, and a SOC-style dashboard.
+Prototype intrusion detection system (IDS) with alerting, optional blocking, and a SOC-style dashboard for live network monitoring.
 
 ## Features
 - Detects port scans, SYN floods, ICMP floods, brute-force bursts, DNS floods, and suspicious HTTP/HTTPS activity.
