@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IDS Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Network IDS Dashboard</h1>
+        <p>Live alerts, traffic summaries, and automated mitigation status.</p>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Alert Distribution</h2>
+          <canvas id="alertChart" height="200"></canvas>
+        </article>
+        <article class="card">
+          <h2>Traffic Volume (Last 30 Minutes)</h2>
+          <canvas id="trafficChart" height="200"></canvas>
+        </article>
+      </section>
+
+      <section class="card alerts">
+        <h2>Recent Alerts</h2>
+        <div class="table">
+          <div class="table-row table-header">
+            <span>Timestamp</span>
+            <span>Source</span>
+            <span>Destination</span>
+            <span>Type</span>
+            <span>Severity</span>
+            <span>Details</span>
+          </div>
+          <div id="alertsBody"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
