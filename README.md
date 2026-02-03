@@ -54,11 +54,21 @@ Configure the IDS using environment variables:
 - `/api/protocol-distribution` – summary of protocol counts.
 
 ## Live sniffing
-Set `IDS_SIMULATE=false` and ensure `scapy` is installed. Packet sniffing usually requires elevated privileges:
+To capture real traffic from your network, disable simulation mode and run with elevated privileges:
 
 ```bash
+pip install -r requirements.txt
 IDS_SIMULATE=false sudo -E python -m ids.app
 ```
+
+If you still see simulated traffic, confirm the `IDS_SIMULATE` environment variable is set to `false` in the same shell session where you start the app. You can also export it before launching:
+
+```bash
+export IDS_SIMULATE=false
+sudo -E python -m ids.app
+```
+
+> Note: Live sniffing relies on `scapy`, which requires Npcap/WinPcap on Windows and root/admin permissions on most platforms.
 
 ## Notes
 - Blocking is best-effort and only supported on Linux with `iptables`.
