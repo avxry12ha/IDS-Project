@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Network SOC Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div>
+          <h1>Network SOC Dashboard</h1>
+          <p>Live packet monitoring, threat detection, and SOC telemetry.</p>
+        </div>
+        <div class="toggle">
+          <label for="httpsToggle">HTTPS Interception (Lab)</label>
+          <button id="httpsToggle" class="toggle-button" type="button">Disabled</button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="card glow">
+          <h2>Alert Distribution</h2>
+          <canvas id="alertChart" height="180"></canvas>
+        </article>
+        <article class="card glow">
+          <h2>Traffic Over Time</h2>
+          <canvas id="trafficChart" height="180"></canvas>
+        </article>
+        <article class="card">
+          <h2>Top Source IPs</h2>
+          <canvas id="topSourcesChart" height="180"></canvas>
+        </article>
+        <article class="card">
+          <h2>Top Destination Ports</h2>
+          <canvas id="topPortsChart" height="180"></canvas>
+        </article>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Active Attacks</h2>
+          <ul id="activeAttacks" class="stack"></ul>
+        </article>
+        <article class="card">
+          <h2>TLS Activity</h2>
+          <div class="tls-panel">
+            <div>
+              <h3>Top TLS Sources</h3>
+              <ul id="tlsSources" class="stack"></ul>
+            </div>
+            <div>
+              <h3>Interception Status</h3>
+              <p id="interceptionStatus" class="muted"></p>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Recently Visited Domains</h2>
+          <div class="table scroll">
+            <div class="table-row table-header">
+              <span>Time</span>
+              <span>Domain</span>
+              <span>Source</span>
+              <span>Protocol</span>
+            </div>
+            <div id="domainsBody"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card alerts">
+        <div class="alerts-header">
+          <h2>Alert Log</h2>
+          <div class="filters">
+            <button class="filter" data-protocol="ALL">All</button>
+            <button class="filter" data-protocol="ICMP">ICMP</button>
+            <button class="filter" data-protocol="TCP">TCP</button>
+            <button class="filter" data-protocol="UDP">UDP</button>
+            <button class="filter" data-protocol="DNS">DNS</button>
+            <button class="filter" data-protocol="HTTP">HTTP</button>
+            <button class="filter" data-protocol="HTTPS">HTTPS</button>
+          </div>
+        </div>
+        <div class="table scroll">
+          <div class="table-row table-header sortable">
+            <span data-sort="timestamp">Timestamp</span>
+            <span data-sort="src_ip">Source</span>
+            <span data-sort="dst_ip">Destination</span>
+            <span data-sort="protocol">Protocol</span>
+            <span data-sort="alert_type">Type</span>
+            <span data-sort="severity">Severity</span>
+            <span data-sort="category">Category</span>
+            <span data-sort="dst_port">Port</span>
+          </div>
+          <div id="alertsBody"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
